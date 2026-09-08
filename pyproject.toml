@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-release-orchestrator"
+version = "1.0.0"
+description = "Production release readiness, telemetry evaluation, and GitOps rollback orchestration."
+requires-python = ">=3.11"
+dependencies = [
+  "langgraph==0.2.53",
+  "pydantic==2.10.6",
+  "PyGithub==2.5.0",
+  "fastapi==0.115.8",
+  "uvicorn[standard]==0.34.0",
+  "requests==2.32.3",
+  "openai==1.63.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.4"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+

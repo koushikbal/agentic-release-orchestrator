@@ -1,0 +1,31 @@
+name: Release Readiness Orchestrator
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        required: true
+        type: string
+      repo_name:
+        required: true
+        type: string
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install .[dev]
+      - run: pytest -q
+      - name: Run orchestrator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python -m src.main --repo "${{ inputs.repo_name }}" --commit "${{ inputs.commit_hash }}"
+
