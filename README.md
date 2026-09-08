@@ -29,6 +29,12 @@ python -m src.main --repo example/service --commit abc123
 pytest -q
 ```
 
+Run the complete local demo with Docker Compose:
+
+```bash
+docker compose up --build --abort-on-container-exit orchestrator
+```
+
 Set `MOCK_HEALTHY=false` to exercise unhealthy telemetry. The mock service exposes `POST /deploy` and `GET /metrics`.
 
 ## Configuration
@@ -39,3 +45,6 @@ Set `MOCK_HEALTHY=false` to exercise unhealthy telemetry. The mock service expos
 
 The workflow under `.github/workflows/release-orchestrator.yml` runs tests before orchestration and requests repository contents write permission for revert creation. In production, place the mock endpoints behind real deployment and Prometheus adapters, use a narrowly scoped GitHub App installation token, and protect `main` with required reviews and status checks.
 
+## Repository quality
+
+The project includes an MIT license, a reproducible Docker Compose demo, pinned runtime dependencies, unit tests for approved, halted, healthy, and fail-closed rollback paths, and a manually dispatched GitHub Actions workflow. Secrets are supplied only through environment variables or GitHub Actions secrets; no credentials are stored in the repository.

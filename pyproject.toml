@@ -6,6 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "agentic-release-orchestrator"
 version = "1.0.0"
 description = "Production release readiness, telemetry evaluation, and GitOps rollback orchestration."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Koushik Balaji" }]
 requires-python = ">=3.11"
 dependencies = [
   "langgraph==0.2.53",
@@ -18,9 +21,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest==8.3.4"]
+dev = ["pytest==8.3.4", "httpx==0.28.1"]
+
+[tool.setuptools.packages.find]
+include = ["src*", "mock_server*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
-
