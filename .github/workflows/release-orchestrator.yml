@@ -1,6 +1,9 @@
 name: Release Readiness Orchestrator
 
 on:
+  push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
     inputs:
       commit_hash:
@@ -11,7 +14,19 @@ on:
         type: string
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install .[dev]
+      - run: pytest -q
   readiness:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -21,11 +36,11 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install .[dev]
-      - run: pytest -q
       - name: Run orchestrator
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python -m src.main --repo "${{ inputs.repo_name }}" --commit "${{ inputs.commit_hash }}"
+
 
